@@ -5,7 +5,7 @@ import { useCart } from '../../hooks/useCart';
 
 export default function Header() {
     const user = {
-      name: 'John',
+      name: 'Domantas',
     };
   
     const { cart } = useCart();
