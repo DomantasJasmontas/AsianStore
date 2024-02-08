@@ -25,7 +25,7 @@ export default function ProoductPage() {
         <div className={classes.container}>
           <img
             className={classes.image}
-            src={`/products/${product.imageUrl}`}
+            src={`${product.imageUrl}`}
             alt={product.name}
           />
 

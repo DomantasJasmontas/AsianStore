@@ -1,34 +1,77 @@
 import { Router } from 'express';
-import { sample_products, sample_tags } from '../data.js';
+import { ProductModel } from '../Models/product.model.js';
+import handler from 'express-async-handler';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.send(sample_products);
-});
+router.get(
+  '/',
+  handler(async (req, res) => {
+    const products = await ProductModel.find({});
+    res.send(products);
+  })
+);
 
-router.get('/tags', (req, res) => {
-  res.send(sample_tags);
-});
+router.get(
+  '/tags',
+  handler(async (req, res) => {
+    const tags = await ProductModel.aggregate([
+      {
+        $unwind: '$tags',
+      },
+      {
+        $group: {
+          _id: '$tags',
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: '$_id',
+          count: '$count',
+        },
+      },
+    ]).sort({ count: -1 });
 
-router.get('/search/:searchTerm', (req, res) => {
-  const { searchTerm } = req.params;
-  const products = sample_products.filter(item =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  res.send(products);
-});
+    const all = {
+      name: 'All',
+      count: await ProductModel.countDocuments(),
+    };
 
-router.get('/tag/:tag', (req, res) => {
-  const { tag } = req.params;
-  const products = sample_products.filter(item => item.tags?.includes(tag));
-  res.send(products);
-});
+    tags.unshift(all);
 
-router.get('/:productId', (req, res) => {
-  const { productId } = req.params;
-  const product = sample_products.find(item => item.id === productId);
-  res.send(product);
-});
+    res.send(tags);
+  })
+);
 
+router.get(
+  '/search/:searchTerm',
+  handler(async (req, res) => {
+    const { searchTerm } = req.params;
+    const searchRegex = new RegExp(searchTerm, 'i');
+
+    const products = await ProductModel.find({ name: { $regex: searchRegex } });
+    res.send(products);
+  })
+);
+
+router.get(
+  '/tag/:tag',
+  handler(async (req, res) => {
+    const { tag } = req.params;
+    const products = await ProductModel.find({ tags: tag });
+    res.send(products);
+  })
+);
+
+router.get(
+  '/:productId',
+  handler(async (req, res) => {
+    const { productId } = req.params;
+    const product = await ProductModel.findById(productId);
+    res.send(product);
+  })
+);
+ 
 export default router;

@@ -17,7 +17,7 @@ export default function CartPage() {
               <li key={item.product.id}>
                 <div>
                   <img
-                    src={`/products/${item.product.imageUrl}`}
+                    src={`${item.product.imageUrl}`}
                     alt={item.product.name}
                   />
                 </div>

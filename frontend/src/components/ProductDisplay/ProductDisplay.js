@@ -10,7 +10,7 @@ export default function ProductDisplay({ products }) {
           <Link to={`/product/${product.id}`}>
             <img
               className={classes.image}
-              src={`/products/${product.imageUrl}`}
+              src={`${product.imageUrl}`}
               alt={product.name}
             />
 
