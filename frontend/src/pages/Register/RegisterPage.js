@@ -95,9 +95,9 @@ export default function RegisterPage() {
           <Button type="submit" text="Register" />
 
           <div className={classes.login}>
-            Already a user? &nbsp;
+          If you have an account,  &nbsp;
             <Link to={`/login${returnUrl ? '?returnUrl=' + returnUrl : ''}`}>
-              Login here
+            Press Here!
             </Link>
           </div>
         </form>
