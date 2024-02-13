@@ -21,7 +21,7 @@ export const getAllByTag = async tag => {
   return data;
 };
 
-export const getById = async foodId => {
-  const { data } = await axios.get('/api/products/' + foodId);
+export const getById = async productId => {
+  const { data } = await axios.get('/api/products/' + productId);
   return data;
 };
